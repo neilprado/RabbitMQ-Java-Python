@@ -7,3 +7,13 @@ def consumer_callback(ch, method, properties, body):
     for livro in novos_livro:
         print 'Nome: ', livro['nome'], 'Editora:', livro[editora]
 
+connection = pika.BlockingConnection(pika.ConnectionParameters())
+
+nome_fila = 'filaJson'
+channel = connection.channel()
+channel.queue_declare(queue=nome_fila)
+channel.basic_consume(on_message_callback=consumer_callback, queue=nome_fila, autoAck=True)
+
+channel.start_consuming()
+
+
